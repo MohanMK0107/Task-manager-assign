@@ -6,6 +6,6 @@ interface SessionproviderProps {
   children:React.ReactNode;
   session:Session | null
 }
-export const Sessionprovider = ({children , session}:SessionproviderProps)=>{
+export const SessionProviderWrapper = ({children , session}:SessionproviderProps)=>{
   return <SessionProvider session={session}>{children}</SessionProvider>
 }

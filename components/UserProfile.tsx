@@ -1,5 +1,4 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { useAppDispatch } from "@/redux/hooks";
 import { openCreateTask } from "@/redux/Uislice";
@@ -9,6 +8,7 @@ const UserProfile = () => {
     
   const dispatch = useAppDispatch();
   const {data:session , status} = useSession();
+  console.log(session)
   if (status === "loading") {
     return <div className="text-white">Loading...</div>;
   }

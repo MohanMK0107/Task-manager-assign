@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/redux/Reduxprovider";
-import { Sessionprovider } from "@/SessionProvider";
+import { SessionProviderWrapper } from "@/SessionProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import { Toaster } from "react-hot-toast";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -26,13 +26,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className={`${inter.variable} ${poppins.variable} antialiased`}>
-        <Sessionprovider session={session}>
+        <SessionProviderWrapper session={session}>
+          <Toaster position="top-center" reverseOrder={false}/>
           <ReduxProvider>{children}</ReduxProvider>
-        </Sessionprovider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );

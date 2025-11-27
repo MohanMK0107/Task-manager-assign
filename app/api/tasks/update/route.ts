@@ -17,7 +17,7 @@ export async function PATCH(req: Request) {
       data: {
         title,
         description,
-        dueDate: dueDate ? new Date(dueDate) : null,
+        dueDate: new Date(dueDate) ,
         status,
       },
     });

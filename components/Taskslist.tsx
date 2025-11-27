@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { IoIosArrowDown } from "react-icons/io";
 import { LuArrowUpDown } from "react-icons/lu";
 import { VscSettings } from "react-icons/vsc";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
@@ -58,7 +57,6 @@ function Taskslist() {
     }
   };
 
-  // ✏ Start Editing
   const startEditTask = (task: any) => {
     setEditingTaskId(task.id);
     setUpdatedTitle(task.title);
@@ -67,7 +65,6 @@ function Taskslist() {
     setUpdatedStatus(task.status);
   };
 
-  // 🔄 UPDATE
   const updateTask = async (id: string) => {
     try {
       const res = await fetch(`/api/tasks/update`, {
@@ -91,7 +88,6 @@ function Taskslist() {
     }
   };
 
-  // ⭐ FINAL: Filter + SEARCH PRIORITY + Sort
   const filteredTasks = tasks
     .filter((task) =>
       filterStatus === "All" ? true : task.status === filterStatus
@@ -107,7 +103,6 @@ function Taskslist() {
     .sort((a, b) => {
       const s = search.toLowerCase();
 
-      // 1️⃣ Prioritize search match
       const aMatch =
         a.title.toLowerCase().includes(s) ||
         a.description.toLowerCase().includes(s);
@@ -118,7 +113,6 @@ function Taskslist() {
       if (aMatch && !bMatch) return -1;
       if (!aMatch && bMatch) return 1;
 
-      // 2️⃣ Apply normal sorting
       if (sortBy === "newest") {
         return (
           new Date(b.createdAt).getTime() -
@@ -188,6 +182,8 @@ function Taskslist() {
 
       {/* Task List */}
       <div className="flex flex-col w-full gap-4">
+        {tasks.length > 0 ?
+        <>
         {filteredTasks.map((task) => (
           <div
             key={task.id}
@@ -278,7 +274,9 @@ function Taskslist() {
               </>
             )}
           </div>
-        ))}
+        ))} </>:
+        <div className="text-4xl f-poppins font-semibold text-white/30 w-full h-full flex justify-center items-center">Add new tasks</div>
+        }
       </div>
     </div>
   );

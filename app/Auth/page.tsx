@@ -4,6 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
+import toast, { Toast } from "react-hot-toast";
 const Page = () => {
   const [state, setState] = useState<"Sign In" | "Sign Up">("Sign In");
 
@@ -27,45 +28,49 @@ const Page = () => {
 
   const [Loading, setLoading] = useState(false);
 
-  const HandleUserAction =async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const HandleUserAction = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
-    if(state === "Sign Up"){
+    if (state === "Sign Up") {
       try {
-        const res = await fetch('/api/signup',{
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
+        const res = await fetch("/api/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email,
             password,
-            username
-          })
-        })
+            name:username,
+          }),
+        });
         const data = await res.json();
-        if(!res.ok) throw new Error(data.error || "Sign Up failed");
-        console.log(data)
-        await signIn('credentials',{
+        toast.success("Sign Up Successfull");
+        if (!res.ok) {
+          toast.error("Sig Up Failed")
+          throw new Error(data.error || "Sign Up failed");
+        }
+        console.log(data);
+        await signIn("credentials", {
           email,
           password,
-          callbackUrl:'/'
+          callbackUrl: "/",
         });
-
-
-      } catch (error:any) {
-        console.error(error)
-      } finally{
-        setLoading(false)
+      } catch (error: any) {
+        console.error(error);
+        toast.error(error)
+      } finally {
+        setLoading(false);
       }
-    }else {
+    } else {
       try {
         await signIn("credentials", {
           email,
           password,
           callbackUrl: "/",
         });
+        toast.success("Sign In Successfull")
       } catch (err: any) {
+        toast.error(err)
         console.error(err);
-        alert(err.message);
       } finally {
         setLoading(false);
       }
@@ -201,7 +206,10 @@ const Page = () => {
               <span className="px-3 text-white/80 f-poppins text-sm ">or</span>
               <span className="flex-grow h-px bg-white/20"></span>
             </div>
-            <button onClick={()=>signIn('google',{callbackUrl:'/'})} className="w-full bg-white/30 flex items-center py-1 justify-center text-[15px] gap-2 f-inter font-semibold rounded-full hover:bg-white/40 cursor-pointer transition-colors duration-300">
+            <button
+              onClick={() => signIn("google", { callbackUrl: "/" })}
+              className="w-full bg-white/30 flex items-center py-1 justify-center text-[15px] gap-2 f-inter font-semibold rounded-full hover:bg-white/40 cursor-pointer transition-colors duration-300"
+            >
               <FcGoogle className="h-5 w-5" /> {state} with Google
             </button>
           </div>
