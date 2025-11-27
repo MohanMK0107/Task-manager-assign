@@ -23,7 +23,7 @@ export const POST = async (req: Request) => {
       return Response.json({ error: "Title is required" }, { status: 400 });
     }
 
-    const due = dueDate ? new Date(dueDate) : undefined;
+    const due = new Date(dueDate);
     if(due && isNaN(due.getTime())){
       return Response.json({ error: "Invalid dueDate format" }, { status: 400 });
     }
